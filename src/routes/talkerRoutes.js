@@ -27,8 +27,8 @@ talkerRoute.get('/talker/:id', async (req, res) => {
     return res.status(200).json(talkersFind[0]);
 });
 
-talkerRoute.post('/talker', tokenValidation,
- fieldValidation, talkValidation, rateValidation, async (req, res) => {
+talkerRoute.post('/talker', tokenValidation, fieldValidation,
+     talkValidation, rateValidation, async (req, res) => {
     const { name, age, talk } = req.body;
     const talkers = await readFile(filePath);
     const id = talkers.length + 1;
