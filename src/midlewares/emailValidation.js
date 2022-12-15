@@ -1,4 +1,4 @@
-const emailValidation = (req, res, next) => {
+function emailValidation(req, res, next) {
     const { email } = req.body;
     function validateEmail(em) {
         const re = /\S+@\S+\.\S+/;
@@ -10,6 +10,6 @@ const emailValidation = (req, res, next) => {
     } 
     
     next();
-};
+}
 
 module.exports = emailValidation;

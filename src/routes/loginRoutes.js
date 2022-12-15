@@ -7,8 +7,8 @@ const loginRoute = express.Router();
 loginRoute.use(express.json());
 
 loginRoute.post('/login', emailValidation, passwordValidation, (req, res) => {
-    const token = generateToken();      
-    return res.status(200).json({ token });
+    const token = generateToken();     
+    return res.status(200).header({ authorization: token }).json({ token });
   });
 
 module.exports = loginRoute;

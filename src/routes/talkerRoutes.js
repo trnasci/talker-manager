@@ -1,6 +1,11 @@
 const express = require('express');
 const path = require('path');
+const fieldValidation = require('../midlewares/fieldValidation');
+const rateValidation = require('../midlewares/rateValidation');
+const talkValidation = require('../midlewares/talkValidation');
+const tokenValidation = require('../midlewares/tokenValidation');
 const { readFile } = require('../utils/readData');
+const { writeFile } = require('../utils/writedata');
 
 const talkerRoute = express.Router();
 talkerRoute.use(express.json());
@@ -20,6 +25,22 @@ talkerRoute.get('/talker/:id', async (req, res) => {
       return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });        
     }
     return res.status(200).json(talkersFind[0]);
+});
+
+talkerRoute.post('/talker', tokenValidation,
+ fieldValidation, talkValidation, rateValidation, async (req, res) => {
+    const { name, age, talk } = req.body;
+    const talkers = await readFile(filePath);
+    const id = talkers.length + 1;
+    const newTalker = {
+        id,
+        name,
+        age,
+        talk,
+        };      
+    talkers.push(newTalker);
+    await writeFile(talkers, filePath);
+    return res.status(201).json(newTalker);
 });
 
 module.exports = talkerRoute;
