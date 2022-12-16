@@ -43,4 +43,29 @@ talkerRoute.post('/talker', tokenValidation, fieldValidation,
     return res.status(201).json(newTalker);
 });
 
+talkerRoute.put('/talker/:id', tokenValidation, fieldValidation,
+     talkValidation, rateValidation, async (req, res) => {
+    const { name, age, talk } = req.body;
+    const { id } = req.params;
+    const talkers = await readFile(filePath);
+    const talkersFind = talkers.filter((e) => e.id !== Number(id));
+    const newTalker = {
+        id: Number(id),
+        name,
+        age,
+        talk,
+        };      
+    talkersFind.push(newTalker);
+    await writeFile(talkersFind, filePath);
+    return res.status(200).json(newTalker);
+});
+
+talkerRoute.delete('/talker/:id', tokenValidation, async (req, res) => {
+    const { id } = req.params;
+    const talkers = await readFile(filePath);
+    const talkersFind = talkers.filter((e) => e.id !== Number(id));      
+    await writeFile(talkersFind, filePath);
+    return res.status(204);
+});
+
 module.exports = talkerRoute;
