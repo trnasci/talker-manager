@@ -20,7 +20,7 @@ talkerRoute.get('/talker', async (req, res) => {
 talkerRoute.get('/talker/:id', async (req, res) => {
     const { id } = req.params;
     const talkers = await readFile(filePath);
-    const talkersFind = talkers.filter((e) => e.id === Number(id));
+    const talkersFind = talkers.filter((e) => Number(e.id) === Number(id));
     if (talkersFind.length === 0) {
       return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });        
     }
@@ -48,7 +48,7 @@ talkerRoute.put('/talker/:id', tokenValidation, fieldValidation,
     const { name, age, talk } = req.body;
     const { id } = req.params;
     const talkers = await readFile(filePath);
-    const talkersFind = talkers.filter((e) => e.id !== Number(id));
+    const talkersFind = talkers.filter((e) => Number(e.id) !== Number(id));
     const newTalker = {
         id: Number(id),
         name,
@@ -63,9 +63,9 @@ talkerRoute.put('/talker/:id', tokenValidation, fieldValidation,
 talkerRoute.delete('/talker/:id', tokenValidation, async (req, res) => {
     const { id } = req.params;
     const talkers = await readFile(filePath);
-    const talkersFind = talkers.filter((e) => e.id !== Number(id));      
+    const talkersFind = talkers.filter((e) => Number(e.id) !== Number(id));      
     await writeFile(talkersFind, filePath);
-    return res.status(204);
+    return res.status(204).json('');
 });
 
 module.exports = talkerRoute;
